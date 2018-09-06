@@ -3,6 +3,7 @@
 import path from "path";
 import commander from 'commander';
 import express from "express";
+import bodyParser from 'body-parser';
 import webpack from "webpack";
 import PathParser from "path-parser";
 
@@ -52,6 +53,9 @@ function reloadClaudiaApp(source, filename) {
 }
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.all("*", (req, res) => {
   const params = getParams(req, routes);

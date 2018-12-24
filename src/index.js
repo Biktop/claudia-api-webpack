@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-import path from "path";
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
 import commander from 'commander';
 import express from "express";
 import bodyParser from 'body-parser';
@@ -12,9 +14,11 @@ const port = 3000;
 commander
   .option('--config <config>', 'Specify webpack config file')
   .option('-p --port [port]', `Specify port to use [${port}]`, port)
+  .option('--cert [cert]', 'Specify certificate')
+  .option('--key [key]', 'Specify key')
   .parse(process.argv);
 
-if (!commander.config) {
+if (!commander.config || ((commander.cert || commander.key) && !(commander.cert && commander.key))) {
   commander.outputHelp();
   process.exit(1);
 }
@@ -65,7 +69,14 @@ app.all("*", (req, res) => {
   });
 });
 
-app.listen(commander.port, function() {
+let server = app;
+if (commander.cert && commander.key) {
+  const key = fs.readFileSync(commander.key);
+  const cert = fs.readFileSync(commander.cert);
+  server = https.createServer({ key, cert }, app);
+}
+
+server.listen(commander.port, function() {
   console.log(`Server listening on port ${commander.port}.`);
 });
 

@@ -62,3 +62,5 @@ typings/
 
 # Lib
 lib
+
+.DS_Store

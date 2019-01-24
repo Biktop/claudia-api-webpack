@@ -5,6 +5,7 @@ import path from 'path';
 import https from 'https';
 import commander from 'commander';
 import express from "express";
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import webpack from "webpack";
 import PathParser from "path-parser";
@@ -58,6 +59,7 @@ function reloadClaudiaApp(source, filename) {
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

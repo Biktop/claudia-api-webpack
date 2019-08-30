@@ -60,6 +60,7 @@ function reloadClaudiaApp(source, filename) {
 const app = express();
 
 app.use(cors());
+app.use(bodyParser.text({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

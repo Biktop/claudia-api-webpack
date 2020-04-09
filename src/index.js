@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import http from 'http';
 import https from 'https';
 import commander from 'commander';
 import express from "express";
@@ -11,6 +12,9 @@ import webpack from "webpack";
 import PathParser from "path-parser";
 
 const port = 3000;
+
+console.log('sds');
+
 
 commander
   .option('--config <config>', 'Specify webpack config file')
@@ -72,11 +76,14 @@ app.all("*", (req, res) => {
   });
 });
 
-let server = app;
+let server;
 if (commander.cert && commander.key) {
   const key = fs.readFileSync(commander.key);
   const cert = fs.readFileSync(commander.cert);
   server = https.createServer({ key, cert }, app);
+}
+else {
+  server = http.createServer(app);
 }
 
 server.listen(commander.port, function() {

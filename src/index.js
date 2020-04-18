@@ -9,12 +9,9 @@ import express from "express";
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import webpack from "webpack";
-import PathParser from "path-parser";
+import { Path }  from "path-parser";
 
 const port = 3000;
-
-console.log('sds');
-
 
 commander
   .option('--config <config>', 'Specify webpack config file')
@@ -134,7 +131,7 @@ function getRoutes(routesObj) {
     return {
       resourcePath: route,
       supportedMethods,
-      path: PathParser.createPath(route.replace(/{(.+?)}/g, ':$1'))
+      path: Path.createPath(route.replace(/{(.+?)}/g, ':$1'))
     };
   });
 }

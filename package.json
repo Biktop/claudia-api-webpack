@@ -1,6 +1,6 @@
 {
   "name": "@b1kt0p/claudia-api-webpack",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Help to run local lambda",
   "main": "./lib/index.js",
   "files": [

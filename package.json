@@ -1,6 +1,6 @@
 {
   "name": "@b1kt0p/claudia-api-webpack",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Help to run local lambda",
   "main": "./lib/index.js",
   "files": [
@@ -29,18 +29,18 @@
   },
   "homepage": "https://github.com/Biktop/claudia-api-webpack#readme",
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/cli": "^7.10.0",
+    "@babel/core": "^7.10.0",
+    "@babel/preset-env": "^7.10.0",
     "babel-preset-minify": "^0.5.1",
-    "webpack": "^4.42.1"
+    "webpack": "^4.43.0"
   },
   "peerDependencies": {
     "webpack": ">= 4"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
-    "commander": "^5.0.0",
+    "commander": "^5.1.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "path-parser": "^6.1.0"

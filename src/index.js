@@ -61,9 +61,9 @@ function reloadClaudiaApp(source, filename) {
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.text({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.text({ extended: true, limit: '50mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+app.use(bodyParser.json({ limit: '50mb' }));
 
 app.all("*", (req, res) => {
   const params = getParams(req, routes);

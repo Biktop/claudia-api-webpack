@@ -28,20 +28,15 @@ if (!commander.config || ((commander.cert || commander.key) && !(commander.cert 
 const config = require(path.join(process.cwd(), commander.config));
 const compiler = webpack(config);
 
+compiler.hooks.assetEmitted.tap('claudia-api-webpack', (file, { content }) => {
+  if (config.output.filename == file) {
+    console.log('Reload claudia app');
+    reloadClaudiaApp(content.toString(), file);
+  }
+})
+
 compiler.watch({}, (error, stats) => {
   console.log(stats.toString({ colors: true }));
-  if (error || stats.hasErrors()) {
-    return;
-  }
-
-  if (stats.compilation.chunks.length !== 1 || stats.compilation.chunks[0].files.length !== 1) {
-    return console.error('Unsupported compilation result');
-  }
-
-  const file = stats.compilation.chunks[0].files[0];
-  const source = stats.compilation.assets[file].source();
-
-  reloadClaudiaApp(source, file);
 });
 
 let claudiaApp = null;

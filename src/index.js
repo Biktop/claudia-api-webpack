@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import http from 'http';
 import https from 'https';
-import commander from 'commander';
+import { Command } from 'commander';
 import express from "express";
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -13,24 +13,27 @@ import { Path }  from "path-parser";
 
 const port = 3000;
 
-commander
-  .option('--config <config>', 'Specify webpack config file')
+const program = new Command();
+program
+  .requiredOption('--config <config>', 'Specify webpack config file')
   .option('-p --port [port]', `Specify port to use [${port}]`, port)
   .option('--cert [cert]', 'Specify certificate')
-  .option('--key [key]', 'Specify key')
-  .parse(process.argv);
+  .option('--key [key]', 'Specify key');
 
-if (!commander.config || ((commander.cert || commander.key) && !(commander.cert && commander.key))) {
-  commander.outputHelp();
+program.parse(process.argv);
+const options = program.opts();
+
+if (!options.config || ((options.cert || options.key) && !(options.cert && options.key))) {
+  program.outputHelp();
   process.exit(1);
 }
 
-const config = require(path.join(process.cwd(), commander.config));
+const config = require(path.join(process.cwd(), options.config));
 const compiler = webpack(config);
 
 compiler.hooks.assetEmitted.tap('claudia-api-webpack', (file, { content }) => {
   if (config.output.filename == file) {
-    console.log('Reload claudia app');
+    console.log('Reload claudia app...');
     reloadClaudiaApp(content.toString(), file);
   }
 })
@@ -69,17 +72,17 @@ app.all("*", (req, res) => {
 });
 
 let server;
-if (commander.cert && commander.key) {
-  const key = fs.readFileSync(commander.key);
-  const cert = fs.readFileSync(commander.cert);
+if (options.cert && options.key) {
+  const key = fs.readFileSync(options.key);
+  const cert = fs.readFileSync(options.cert);
   server = https.createServer({ key, cert }, app);
 }
 else {
   server = http.createServer(app);
 }
 
-server.listen(commander.port, function() {
-  console.log(`Server listening on port ${commander.port}.`);
+server.listen(options.port, function() {
+  console.log(`Server listening on port ${options.port}.`);
 });
 
 function getPathParams(req, routes) {

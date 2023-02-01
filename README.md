@@ -16,7 +16,7 @@ yarn add @b1kt0p/claudia-api-webpack
 
 ## Requirements
 
-@b1kt0p/claudia-api-webpack has been built to work by default from **Node >= 8.10**.
+@b1kt0p/claudia-api-webpack has been built to work by default from **Node >= 14**.
 
 If you need to run it in earlier versions of Node (eg. 4.3) then you will have to
 *transpile* claudia-api-webpack's code yourself using [babel](https://babeljs.io/) or a similar tool.

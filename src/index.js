@@ -9,7 +9,7 @@ import express from "express";
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import webpack from "webpack";
-import { Path }  from "path-parser";
+import { Path } from "path-parser";
 
 const port = 3000;
 
@@ -46,14 +46,20 @@ let claudiaApp = null;
 let routes = null;
 
 function reloadClaudiaApp(source, filename) {
-  const m = new module.constructor();
-  m.paths = module.paths;
-  m._compile(source, filename);
+  try {
+    const m = new module.constructor();
+    m.paths = module.paths;
+    m._compile(source, filename);
 
-  claudiaApp = m.exports;
+    claudiaApp = m.exports;
 
-  const apiConfig = claudiaApp.apiConfig();
-  routes = getRoutes(apiConfig.routes);
+    const apiConfig = claudiaApp.apiConfig();
+    routes = getRoutes(apiConfig.routes);
+  }
+  catch (error) {
+    routes = [];
+    console.error('Failed to compile module', error);
+  }
 }
 
 const app = express();
@@ -66,7 +72,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.all("*", (req, res) => {
   const params = getParams(req, routes);
 
-  claudiaApp.proxyRouter(params, {
+  claudiaApp?.proxyRouter(params, {
     done: makeHandleResponse(res)
   });
 });
@@ -81,7 +87,7 @@ else {
   server = http.createServer(app);
 }
 
-server.listen(options.port, function() {
+server.listen(options.port, function () {
   console.log(`Server listening on port ${options.port}.`);
 });
 
@@ -123,7 +129,7 @@ function getParams(req, routes) {
 function getRoutes(routesObj) {
   const routePaths = Object.keys(routesObj);
 
-  return routePaths.map(function(routePath) {
+  return routePaths.map(function (routePath) {
     const supportedMethods = Object.keys(routesObj[routePath] || {});
     const route = `/${routePath}`;
     return {
@@ -135,7 +141,7 @@ function getRoutes(routesObj) {
 }
 
 function makeHandleResponse(res) {
-  return function(err, response) {
+  return function (err, response) {
     if (err) {
       const body = {
         message: err.message

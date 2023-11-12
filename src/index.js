@@ -18,6 +18,7 @@ program
   .requiredOption('--config <config>', 'Specify webpack config file')
   .option('-p --port [port]', `Specify port to use [${port}]`, port)
   .option('--cert [cert]', 'Specify certificate')
+  .option('--no-cors', 'Disable default cors')
   .option('--key [key]', 'Specify key');
 
 program.parse(process.argv);
@@ -64,7 +65,7 @@ function reloadClaudiaApp(source, filename) {
 
 const app = express();
 
-app.use(cors());
+if (options.cors) { app.use(cors()) }
 app.use(bodyParser.text({ extended: true, limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
